@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>Multer:File Upload</title>
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script>
+function validate() {
+ formData = new FormData();
+formData.append('file', $('#file')[0].files[0]);
+
+      $.ajax ({
+               type: "POST",
+			         url:'http://localhost:3000/api/photo',
+                      processData: false,
+                      contentType: false,
+			                data: formData,
+                      beforeSend:function()
+                      {
+                         document.getElementById('txtloading').innerHTML="Upload started..";
+                      },
+                      success: function(data) {    
+                            //alert('success'+JSON.stringify(data));
+                             //document.getElementById('txtloading').innerHTML="Upload started..";
+                      },
+                    error: function(data) {
+                        //alert("Msg: "+ data.status + ": " + data.statusText);
+                        document.getElementById('txtloading').innerHTML="Error:"+data.statusText;
+                      },
+                      complete:function(){
+                        //alert('completed');
+                        document.getElementById('txtloading').innerHTML="Upload completed..";
+                      }
+                  }); 
+      return false;
+};
+
+</script>
+</head>
+<body>
+<form>
+<input id="file" type="file" name="userPhoto" />
+<input type="submit" value="Upload Image" name="submit" onclick="return validate()">
+<div id="txtloading"></div>
+</form>
+
+</body>
+</html>

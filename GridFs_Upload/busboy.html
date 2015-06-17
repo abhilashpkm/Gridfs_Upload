@@ -1,0 +1,99 @@
+<html>
+<head>
+<title>Busboy:File Upload</title>
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script>
+function validate_old() {
+ formData = new FormData();
+formData.append('file', $('#file')[0].files[0]);
+      $.ajax ({
+               type: "POST",
+			         url:'http://localhost:5000/file',
+                      processData: false,
+                      contentType: false,
+			                data: formData,
+                      beforeSend:function()
+                      {
+                         document.getElementById('txtloading').innerHTML="Upload started..";
+                      },
+                      success: function(data) {    
+                           // alert('success'+JSON.stringify(data));
+                      },
+                    error: function(data) {
+                       // alert("Msg: "+ data.status + ": " + data.statusText);
+                        document.getElementById('txtloading').innerHTML="Error:"+data.statusText;
+                      },
+                        complete:function(){
+                        //alert('completed');
+                        document.getElementById('txtloading').innerHTML="Upload completed..";
+                      }
+                           
+                           
+                  }); 
+      return false;
+
+
+};
+
+function validate() {
+
+var file=$('#file')[0].files[0]
+
+console.log(file);
+ var reader = new FileReader();
+
+reader.onload = function(event) {
+    var contents = event.target.result;
+   // console.log("File contents: " + contents.length);
+  var data={Content:contents,FileName:file.name};
+  data=JSON.stringify(data);
+      $.ajax ({
+               type: "POST",
+               url:'http://localhost:5000/add',
+                      processData: false,
+                      contentType: 'application/json',
+                      data: data,
+                      beforeSend:function()
+                      {
+                         document.getElementById('txtloading').innerHTML="Upload started..";
+                      },
+                      success: function(data) {    
+                           // alert('success'+JSON.stringify(data));
+                      },
+                    error: function(data) {
+                       // alert("Msg: "+ data.status + ": " + data.statusText);
+                        document.getElementById('txtloading').innerHTML="Error:"+data.statusText;
+                      },
+                        complete:function(){
+                        //alert('completed');
+                        document.getElementById('txtloading').innerHTML="Upload completed..";
+                      }
+                           
+                           
+                  }); 
+   
+
+};
+
+reader.onerror = function(event) {
+    console.error("File could not be read! Code " + event.target.error.code);
+};
+
+reader.readAsText(file);
+
+return false;
+
+};
+
+</script>
+</head>
+<body>
+<form>
+<input id="file" type="file" name="userPhoto" />
+<input type="submit" value="Upload Image" name="submit" onclick="return validate()">
+<div id="txtloading"></div>
+<div id="divAnchor"></div>
+</form>
+
+</body>
+</html>
